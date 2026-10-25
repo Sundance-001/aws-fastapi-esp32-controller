@@ -1,0 +1,16 @@
+# Python & Environment
+__pycache__/
+*.pyc
+.venv/
+env/
+
+# Deployment Artifacts
+*.zip
+package/
+dashboard.zip
+deployment_package.zip
+
+# IDEs & OS
+.vscode/
+.idea/
+.DS_Store

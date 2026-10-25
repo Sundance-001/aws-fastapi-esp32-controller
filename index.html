@@ -1,0 +1,73 @@
+// Ensure to include the actual API Gateway URL in the const API_URL at line 31 on the script file.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32 Remote Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 400px; margin: auto; }
+        .control-group { margin-bottom: 15px; }
+        button { padding: 10px 20px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h2>ESP32 Dashboard</h2>
+    
+    <div class="control-group">
+        <label>OLED Text:</label><br>
+        <input type="text" id="oledText" value="Loading...">
+    </div>
+    
+    <div class="control-group">
+        <label><input type="checkbox" id="ledRed"> Red LED</label><br>
+        <label><input type="checkbox" id="ledYellow"> Yellow LED</label><br>
+        <label><input type="checkbox" id="ledGreen"> Green LED</label>
+    </div>
+    
+    <button onclick="updateState()">Send to ESP32</button>
+    <p id="status"></p>
+
+    <script>
+        // REPLACE THIS with your actual API Gateway URL
+        const API_URL = "";
+
+        async function fetchState() {
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                document.getElementById('oledText').value = data.oled_text.S;
+                document.getElementById('ledRed').checked = data.led_red.BOOL;
+                document.getElementById('ledYellow').checked = data.led_yellow.BOOL;
+                document.getElementById('ledGreen').checked = data.led_green.BOOL;
+            } catch (error) {
+                document.getElementById('status').innerText = "Error loading state.";
+            }
+        }
+
+        async function updateState() {
+            document.getElementById('status').innerText = "Updating...";
+            const payload = {
+                oled_text: document.getElementById('oledText').value,
+                led_red: document.getElementById('ledRed').checked,
+                led_yellow: document.getElementById('ledYellow').checked,
+                led_green: document.getElementById('ledGreen').checked
+            };
+
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                document.getElementById('status').innerText = "Update successful!";
+            } catch (error) {
+                document.getElementById('status').innerText = "Failed to update.";
+            }
+        }
+
+        // Load current state when page opens
+        fetchState();
+    </script>
+</body>
+</html>

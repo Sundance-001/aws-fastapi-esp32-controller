@@ -1,0 +1,1 @@
+{"device_id": {"S": "esp32_main"}, "oled_text": {"S": "Ready"}, "led_red": {"BOOL": false}, "led_yellow": {"BOOL": false}, "led_green": {"BOOL": false}}
